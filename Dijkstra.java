@@ -1,35 +1,20 @@
-import java.lang.reflect.Array;
 import java.util.*;
-public class Dijkstra {
-    static class Edge {
-        int src;
-        int dest;
-        int wt;
+public class dij {
+    public static class Edge{
+        int src ;
+        int dest ;
+        int wt ;
 
-        public Edge(int s, int d, int w) {
+        Edge(int s , int d , int w){
             this.src = s;
             this.dest = d;
             this.wt = w;
         }
-    }
-
-    public static void createGraph(ArrayList<Edge> graph[]){
-        for(int i=0 ; i<graph.length ; i++){
-            graph[i] = new ArrayList<Edge>();
-        }
-            graph[0].add(new Edge(0, 1, 2));
-            graph[0].add(new Edge(0, 2, 4));
-            graph[1].add(new Edge(1, 3, 7));
-            graph[1].add(new Edge(1, 2, 1));
-            graph[2].add(new Edge(2, 4, 3));
-            graph[3].add(new Edge(3, 5, 1));
-            graph[4].add(new Edge(4, 3, 2));
-            graph[4].add(new Edge(4, 5, 5));
 
     }
     public static class Pair implements Comparable<Pair>{
-        int node;
         int dist ;
+        int node ;
 
         Pair(int n , int d){
             this.node = n;
@@ -38,51 +23,104 @@ public class Dijkstra {
 
         @Override
         public int compareTo(Pair p2){
-            return this.dist - p2.dist; //priority queue need to know that on what basis it will compare Pair we want to compare it on the basis of distance
+            return this.dist - p2.dist;
         }
     }
-    public static void dijkstra(ArrayList<Edge> graph[] , int src , int V ){
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        Scanner sc = new Scanner(System.in);
+
+        for(int i=0 ; i<graph.length ; i++){
+            graph[i] = new ArrayList<>();
+
+            System.out.println("Enter the neighbours of "+i+" : ");
+
+            while(true){
+                int input , weight;
+                System.out.println("Enter the inputs :");
+                input = sc.nextInt();
+                System.out.println("Enter the weight :");
+                weight = sc.nextInt();
+
+                if(input == -1){
+                    break;
+                }
+                graph[i].add(new Edge(i , input , weight));
+            }
+            
+        }
+        // graph[0].add(new Edge(0, 1, 2));
+        // graph[0].add(new Edge(0, 2, 4));
+        // graph[1].add(new Edge(1, 3, 7));
+        // graph[1].add(new Edge(1, 2, 1));
+        // graph[2].add(new Edge(2, 4, 3));
+        // graph[3].add(new Edge(3, 5, 1));
+        // graph[4].add(new Edge(4, 3, 2));
+        // graph[4].add(new Edge(4, 5, 5));
+        
+
+        
+    }
+    public static void dijk(ArrayList<Edge> graph[] , int src , int V ){
         PriorityQueue<Pair> pq = new PriorityQueue<>();
         int dist[] = new int[V];
+
         for(int i=0 ; i<V ; i++){
-            if(i != src){
+            if( i != src){
                 dist[i] = Integer.MAX_VALUE;
             }
         }
-        boolean vis[] = new boolean[V];
 
-        pq.add(new Pair(0 , 0));
+        boolean vis[] = new boolean[V];
+        pq.add(new Pair(0, 0));
+
 
         while(!pq.isEmpty()){
             Pair curr = pq.remove();
+            
             if(!vis[curr.node]){
+                System.out.print(curr.node + " ");
                 vis[curr.node] = true;
+            }
 
-                for(int i =0 ; i<graph[curr.node].size() ; i++){
+                for(int i=0 ;i<graph[curr.node].size() ; i++){
                     Edge e = graph[curr.node].get(i);
                     int u = e.src;
                     int v = e.dest;
 
-                    //relaxation step
                     if(dist[u] + e.wt < dist[v]){
                         dist[v] = dist[u] + e.wt;
                         pq.add(new Pair(v , dist[v]));
-
                     }
                 }
-            }
-        }
 
+            
+            
+        }
+        System.out.println();
+        for(int i=0 ; i<V ; i++){
+            System.out.print(dist[i] + " ");
+        }
+        System.out.println();
         System.out.print("The minimum cost of the graph is :"+dist[V-1]);
         System.out.println();
-    } 
+
+        
+            
+    }
 
     public static void main(String args[]){
-        int V = 6;
-        ArrayList<Edge> graph[] = new ArrayList[V];
-        createGraph(graph);
-        int src = 0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("VERTICES :");
+        int  V = sc.nextInt();
+        
 
-        dijkstra(graph, src , V);
+        ArrayList<Edge> graph[] = new ArrayList[V];
+
+        createGraph(graph);
+        System.out.print("The shortest path is :");
+        dijk(graph , 0 , V);
+
+
     }
 }
