@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Graph {
-    static class Edge {
+    public static class Edge {
         int src;
         int dest;
 
